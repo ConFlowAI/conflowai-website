@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Conscious Flow AI design tokens.
+  "Ripple" theme sampled from the teal->purple glittering ripple art
+  (Tight Center Ripples): teal (#00465A) <-> purple (#43126C) <-> violet (#26082F).
+  Teal and violet together echo both the brand logo and the hero image.
+*/
+@theme {
+  /* Teal — cool side of the gradient */
+  --color-teal-50: #eef9fb;
+  --color-teal-100: #d2eef3;
+  --color-teal-200: #a6dde8;
+  --color-teal-300: #6ec6d8;
+  --color-teal-400: #2ea6c2;
+  --color-teal-500: #0d86a3;
+  --color-teal-600: #0a6c86;
+  --color-teal-700: #0b566c;
+  --color-teal-800: #0a4257;
+  --color-teal-900: #082f40;
+  --color-navy: #043659;
+
+  /* Violet — warm side of the gradient / brand accent */
+  --color-violet-50: #f6eefb;
+  --color-violet-100: #e9d8f4;
+  --color-violet-200: #d3b3e8;
+  --color-violet-300: #b98ad9;
+  --color-violet-400: #9c5cc6;
+  --color-violet-500: #8a3fb5;
+  --color-violet-600: #6f2f96;
+  --color-violet-700: #571f78;
+  --color-violet-800: #3f1559;
+  --color-violet-900: #2a0d3d;
+
+  --color-ink: #0e2a33;
+  --color-muted: #51666e;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f1f8fa;
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-sora);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/*
+  Ripple logo reveal — mirrors ripple_animation.py:
+  arcs draw inside-out, hold, then fade out, looping.
+  Each <path> sets pathLength="100" so the dash math is uniform.
+*/
+@keyframes ripple-draw {
+  0% {
+    stroke-dashoffset: -100; /* reveal from the opposite end => counter-clockwise */
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  45% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  72% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+.ripple-ring {
+  stroke-dasharray: 100;
+  stroke-dashoffset: -100;
+  animation: ripple-draw 5.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .ripple-ring {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
 }
